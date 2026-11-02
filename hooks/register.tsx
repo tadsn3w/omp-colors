@@ -23,18 +23,24 @@ function blocks(text: string): string[] {
   return out
 }
 
-type Seg = { t: string; kind: 'plain' | 'bold' | 'code' | 'path' }
+type Seg = { t: string; kind: 'plain' | 'bold' | 'code' | 'path' | 'italic' | 'link' | 'url' | 'strike' }
 
-// **bold** and `code` and paths like ~/x or /home/x.
+// **bold**, `code`, [link](url), ~~strike~~, *italic* / _italic_, paths like ~/x.
 function inline(line: string): Seg[] {
   const segs: Seg[] = []
-  const re = /\*\*([^*]+)\*\*|`([^`]+)`|((?:~|\/)[\w.\-/]+[\w/])/g
+  const re = /\*\*([^*]+)\*\*|`([^`]+)`|((?:~|\/)[\w.\-/]+[\w/])|\[([^\]]+)\]\(([^)\s]+)\)|~~([^~]+)~~|(?<![\w*])\*([^*\s][^*]*?)\*(?!\w)|(?<!\w)_([^_\s][^_]*?)_(?!\w)/g
   let last = 0
   for (const m of line.matchAll(re)) {
     if (m.index! > last) segs.push({ t: line.slice(last, m.index), kind: 'plain' })
     if (m[1]) segs.push({ t: m[1], kind: 'bold' })
     else if (m[2]) segs.push({ t: m[2], kind: 'code' })
-    else segs.push({ t: m[3] ?? '', kind: 'path' })
+    else if (m[3]) segs.push({ t: m[3], kind: 'path' })
+    else if (m[4]) {
+      segs.push({ t: m[4], kind: 'link' })
+      if (m[5] && m[5] !== m[4]) segs.push({ t: ' (' + m[5] + ')', kind: 'url' })
+    }
+    else if (m[6]) segs.push({ t: m[6], kind: 'strike' })
+    else segs.push({ t: m[7] ?? m[8] ?? '', kind: 'italic' })
     last = m.index! + m[0].length
   }
   if (last < line.length) segs.push({ t: line.slice(last), kind: 'plain' })
@@ -76,10 +82,18 @@ export const register: Register = on => {
         g.kind === 'bold' ? <Text key={k + j} bold>{g.t}</Text>
         : g.kind === 'code' ? <Text key={k + j} color={CODE}>{g.t}</Text>
         : g.kind === 'path' ? <Text key={k + j} color={PATH}>{g.t}</Text>
+        : g.kind === 'link' ? <Text key={k + j} color={MARK} underline>{g.t}</Text>
+        : g.kind === 'url' ? <Text key={k + j} color={RULE}>{g.t}</Text>
+        : g.kind === 'italic' ? <Text key={k + j} italic>{g.t}</Text>
+        : g.kind === 'strike' ? <Text key={k + j} strikethrough>{g.t}</Text>
         : <Text key={k + j}>{g.t}</Text>,
       )
 
     const drawLine = (line: string, i: number) => {
+      if (/^\s*([-*_])(\s*\1){2,}\s*$/.test(line))
+        return <Text key={String(i)} color={RULE}>{'─'.repeat(Math.min(cols - 2, 40))}</Text>
+      const quote = line.match(/^\s*>\s?(.*)$/)
+      if (quote) return <Text key={String(i)}><Text color={RULE}>│ </Text><Text color={RULE}>{segs(quote[1] ?? '', 'q')}</Text></Text>
       const head = line.match(/^(#{1,6})\s+(.*)$/)
       if (head) return <Text key={String(i)} bold>{segs(head[2] ?? '', 'h')}</Text>
       const li = line.match(/^(\s*)([-*]|\d+\.)\s+(.*)$/)

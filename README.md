@@ -7,6 +7,7 @@ A Claude Code mod that colors Claude's replies like the omp (oh-my-pi) dark them
 - Bold: bold only, no color
 - Tables: drawn with box lines, bold header, green code in cells
 - Shell code blocks: green command words, soft yellow strings
+- Italics, strikethrough, links (blue name, gray address), quote blocks and rules
 
 Tool calls stay folded, as Claude Code draws them by default.
 
