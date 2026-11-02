@@ -1,0 +1,20 @@
+{
+  "name": "omp vibrant",
+  "base": "dark",
+  "overrides": {
+    "text": "ansi:whiteBright",
+    "claude": "#febc38",
+    "claudeShimmer": "#ffd77a",
+    "success": "#89d281",
+    "error": "#fc3a4b",
+    "warning": "#e4c00f",
+    "inactive": "#777d88",
+    "subtle": "#3d424a",
+    "suggestion": "#0088fa",
+    "permission": "#178fb9",
+    "promptBorder": "#178fb9",
+    "remember": "#b281d6",
+    "planMode": "#0088fa",
+    "bashBorder": "#0088fa"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "omp-colors",
+  "owner": { "name": "tadsn3w" },
+  "plugins": [{ "name": "omp-colors", "source": "./" }]
+}
