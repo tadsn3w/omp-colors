@@ -29,4 +29,4 @@ claude plugin install omp-colors --marketplace tadsn3w/omp-colors
 
 ## Optional theme
 
-`extras/omp-theme.json` makes normal text bright white and uses omp's accent colors. Copy it to `~/.claude/themes/omp.json`, restart Claude Code once, then pick **omp vibrant** in `/theme`.
+`extras/omp-theme.json` makes normal text bright white, uses omp's accent colors, and gives your own messages an indigo background so they are easy to find. Copy it to `~/.claude/themes/omp.json`, restart Claude Code once, then pick **omp vibrant** in `/theme`.

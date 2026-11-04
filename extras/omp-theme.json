@@ -15,6 +15,8 @@
     "promptBorder": "#178fb9",
     "remember": "#b281d6",
     "planMode": "#0088fa",
-    "bashBorder": "#0088fa"
+    "bashBorder": "#0088fa",
+    "userMessageBackground": "#46408f",
+    "userMessageBackgroundHover": "#5a53ad"
   }
 }
